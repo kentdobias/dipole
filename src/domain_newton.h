@@ -2,6 +2,8 @@
 #define DOMAIN_NEWTON_H
 
 #include <math.h>
+#include <iostream>
+#include <string>
 
 // GSL includes.
 #include <gsl/gsl_math.h>
@@ -24,7 +26,8 @@ template <class energy_func, class grad_func, class hess_func>
 int domain_newton(gsl_vector *state, unsigned size, unsigned params,
 		energy_func get_energy, grad_func get_grad, hess_func get_hess, double
 		epsilon, unsigned max_iterations, double beta, double s, double sigma,
-		double gamma, double eta_0, double delta, double bound, bool verbose) {
+		double gamma, double eta_0, double delta, double bound, bool verbose, bool
+		save_states) {
 /* The function domain_newton carries out a modified version of Newton's
  * method.  On success, 0 is returned.  On failure, 1 is returned.
  * 
@@ -192,8 +195,8 @@ int domain_newton(gsl_vector *state, unsigned size, unsigned params,
 		if (fabs(norm - old_norm) < gamma * eta) eta *= delta;
 
 		// Prints several useful statistics for debugging purposes.
-		if (verbose) printf("m was %i, grad_norm was %e, eta was %e, energy was %e\n",
-				m, norm, eta, energy);
+		if (verbose) printf("NEWTON STEP %06d: m %i, grad_norm %e, eta %e, energy %e\n",
+				iterations, m, norm, eta, energy);
 
 		// Determines if the process has converged to acceptable precision.
 		if (norm < epsilon) {
@@ -206,6 +209,14 @@ int domain_newton(gsl_vector *state, unsigned size, unsigned params,
 
 		// Reset the norm for the next iteration.
 		old_norm = norm;
+
+		if (save_states) {
+			char str[40];
+			sprintf(str, "states/state-%06d.dat", iterations);
+			FILE *fout = fopen(str, "w");
+			gsl_vector_fprintf(fout, state, "%.15e");
+			fclose(fout);
+		}
 
 		// Increment the counter.
 		iterations++;

@@ -63,7 +63,7 @@ int domain_minimize_naked(gsl_vector *z, unsigned n, double c, double eps, unsig
 	nakedgethess hess(c, n);
 	nakedgetenergy energy(c, n);
 
-	return domain_newton(z, size, params, energy, grad, hess, eps, N, beta, s, sigma, gamma, eta0, 0.1, 100, verb);
+	return domain_newton(z, size, params, energy, grad, hess, eps, N, beta, s, sigma, gamma, eta0, 0.1, 100, verb, false);
 }
 
 struct fixedgetgrad {
@@ -102,7 +102,7 @@ int domain_minimize_fixed(gsl_vector *z, unsigned n, double c, double eps, unsig
 	fixedgethess hess(c, n);
 	fixedgetenergy energy(c, n);
 
-	return domain_newton(z, size, params, energy, grad, hess, eps, N, beta, s, sigma, 0, 0, 0.1, 10, true);
+	return domain_newton(z, size, params, energy, grad, hess, eps, N, beta, s, sigma, 0, 0, 0.1, 10, true, false);
 }
 
 struct randgetgrad {
@@ -153,7 +153,7 @@ int domain_minimize_rand(gsl_vector *z, unsigned n, double c, unsigned ord, cons
 	randgethess hess(c, n, ord, k, a, phi);
 	randgetenergy energy(c, n, ord, k, a, phi);
 
-	return domain_newton(z, size, params, energy, grad, hess, eps, N, beta, s, sigma, gamma, bound, 0.1, 2, verb);
+	return domain_newton(z, size, params, energy, grad, hess, eps, N, beta, s, sigma, gamma, bound, 0.1, 2, verb, true);
 }
 
 struct nakedwellgetgrad {
@@ -198,7 +198,7 @@ int domain_minimize_nakedWell(gsl_vector *z, unsigned n, double c, double w, dou
 	nakedwellgethess hess(c, n, w, ss);
 	nakedwellgetenergy energy(c, n, w, ss);
 
-	return domain_newton(z, size, params, energy, grad, hess, eps, N, beta, s, sigma, gamma, eta0, 0.1, 100, verb);
+	return domain_newton(z, size, params, energy, grad, hess, eps, N, beta, s, sigma, gamma, eta0, 0.1, 100, verb, false);
 }
 
 
@@ -256,7 +256,7 @@ int domain_minimize_randWell(gsl_vector *z, unsigned n, double c, unsigned ord, 
 	randwellgethess hess(c, n, ord, k, a, phi, w, ss);
 	randwellgetenergy energy(c, n, ord, k, a, phi, w, ss);
 
-	return domain_newton(z, size, params, energy, grad, hess, eps, N, beta, s, sigma, gamma, eta0, 0.1, 100, verb);
+	return domain_newton(z, size, params, energy, grad, hess, eps, N, beta, s, sigma, gamma, eta0, 0.1, 100, verb, false);
 }
 
 
@@ -296,5 +296,5 @@ int domain_minimize_fixedmin(gsl_vector *z, unsigned n, double c, double eps, un
 	fixedmingethess hess(c, n);
 	fixedmingetenergy energy(c, n);
 
-	return domain_newton(z, size, params, energy, grad, hess, eps, N, beta, s, sigma, gamma, bound, 0.1, 10, verb);
+	return domain_newton(z, size, params, energy, grad, hess, eps, N, beta, s, sigma, gamma, bound, 0.1, 10, verb, false);
 }
